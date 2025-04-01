@@ -12,3 +12,4 @@ driver.get("https://www.yelp.com/search?find_desc=Dentist&find_loc=California+Ci
 
 # Scroll until no more content is loaded
 wait = WebDriverWait(driver, 100)
+time.sleep(10)
