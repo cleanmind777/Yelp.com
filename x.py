@@ -18,13 +18,13 @@ def kill_chrome_processes():
 
 def main():
     # Kill existing Chrome processes
-    kill_chrome_processes()
+    # kill_chrome_processes()
     
     # Configure Chrome options
     options = uc.ChromeOptions()
     
     # Set paths
-    user_data_dir = r"C:\Users\cleanmind\AppData\Local\Google\Chrome\User Data"
+    user_data_dir = r"C:\Users\cleanmind\AppData\Local\Google\Chrome\User Data\Profile 2"
     chromedriver_path = r"E:\code_example\chromedriver-win64\chromedriver.exe"
     
     # Verify paths exist
@@ -57,12 +57,34 @@ def main():
         # Open target website with retry logic
         target_url = "https://www.yelp.com/search?find_desc=Dentist&find_loc=California+City%2C+CA%2C+United+States"
         
-        while True:
-            next_btn = driver.find_element(By.CSS_SELECTOR, ".pagination-button__09f24__kbFYf.y-css-16wjqqa")
-            disable = next_btn.get_attribute("disabled")
-            print(disable)
-            break
+        # while True:
+        #     next_btn = driver.find_element(By.CSS_SELECTOR, ".pagination-button__09f24__kbFYf.y-css-16wjqqa")
+        #     disable = next_btn.get_attribute("disabled")
+        #     print(disable)
+        #     break
         # Verification steps
+        dentists = driver.find_elements(By.CLASS_NAME, " y-css-pwt8yl")
+        for dentist in dentists:
+            dentist_information = {}
+            title_element = dentist.find_element(By.TAG_NAME, "h3")
+            dentist_information['title'] = title_element.text
+            title_element.click()
+            review = driver.find_element(By.CSS_SELECTOR, '[data-testid="BizHeaderReviewCount"]')
+            review_rate = review.find_elements(By.TAG_NAME, 'span')[0].text
+            review_count = review.find_elements(By.TAG_NAME, 'span')[1].text
+            dentist_information['review'] = {
+                'rate' : review_rate,
+                'count' : review_count
+            }
+            contact_information = driver.find_elements(By.CSS_SELECTOR, '[data-testid="cookbook-island"]')[0].find_elements(By.CLASS_NAME, 'y-css-4cg16w')
+            website = contact_information[0].find_element(By.TAG_NAME, 'a').text
+            phone_number = contact_information[1].find_element(By.CLASS_NAME, ' y-css-qn4gww').text
+            address = contact_information[2].find_element(By.CLASS_NAME, ' y-css-p0gpmm').text
+            dentist_information['contact'] = {
+                'website' : website,
+                'phone number' : phone_number,
+                'address' : address
+            }
         driver.save_screenshot("yelp_loaded.png")
         print("Screenshot saved")
         
